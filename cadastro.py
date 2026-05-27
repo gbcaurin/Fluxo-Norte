@@ -53,10 +53,12 @@ def cadastro_pedido():
   nome_cliente = input("Digite o nome do cliente: ")
   endereco = input("Digite o endereço de entrega: ")
   prioridade = input("Digite a prioridade do pedido (Alta ou Normal): ")
+
   prioridade = prioridade.lower()
   while prioridade not in ["alta", "normal"]:
     prioridade = input("Prioridade inválida. Digite 'Alta' ou 'Normal': ")
     prioridade = prioridade.lower()
+    
   descricao = input("Digite a descrição do pedido: ")
 
   if validar_id_pedido(id) and id not in pedidos:
