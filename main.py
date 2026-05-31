@@ -1,6 +1,8 @@
 import os
 
-#VARIAVEIS GLOBAIS
+# ======================================
+# DADOS GLOBAIS
+# ======================================
 
 pedidos = {}
 entregador = {}
@@ -8,7 +10,9 @@ contador_pedidos = 1
 contador_entregadores = 1001
 limite_pedidos = 5
 
-#CADASTRO
+# ======================================
+# UTILITARIOS DE CADASTRO
+# ======================================
 
 def limpar_tela():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -57,39 +61,19 @@ def cadastro_entregador():
     veiculos = ["carro", "van", "moto", "bicicleta", "patinete"]
     id = gerar_id_entregador()
     nome = input("Digite o nome do entregador: ")
-
-    for id_entregador in entregador:
-        if entregador[id_entregador]["nome"] == nome:
-            print("Entregador já cadastrado.")
-            input("\n[Pressione Enter para continuar]")
-            limpar_tela()
-            return
-        
-    print("Tipos de veículo disponíveis:")
-    print("carro")
-    print("van")
-    print("moto")
-    print("bicicleta")
-    print("patinete")
-
-    veiculo = input("Digite o tipo de veículo: ")
-    
+    veiculo = input(f"Digite o tipo de veículo ({', '.join(veiculos)}): ")
 
     while veiculo.lower() not in veiculos:
-        veiculo = input("Veículo inválido. Digite novamente: ")
+        veiculo = input(f"Veículo inválido. Digite um dos seguintes: ({', '.join(veiculos)}): ")
 
-    entregador[id] = {
-        "nome": nome,
-        "veiculo": veiculo,
-        "pedidos": [],
-        "status": True
-    }
-
-    print("Entregador cadastrado com ID:", id)
+    entregador[id] = {"nome": nome, "veiculo": veiculo.lower(), "pedidos": [], "status": True}
+    print(f"Entregador cadastrado com ID: {id}")
     input("\n[Pressione Enter para continuar]")
     limpar_tela()
 
-#BUSCA
+# ======================================
+# UTILITARIOS DE BUSCA
+# ======================================
 
 def buscar_pedido_por_id_interno(id_pedido):
     if id_pedido in pedidos:
@@ -101,7 +85,9 @@ def buscar_entregador_por_id_interno(id_entregador):
         return entregador[id_entregador]
     return None
 
-#EXIBICAO
+# ======================================
+# EXIBICAO
+# ======================================
 
 def exibir_pedido(id_pedido, info):
     if info["entregador"] is None:
@@ -128,7 +114,9 @@ def exibir_entregador(id_entregador, info):
     print(f"Veiculo: {info['veiculo']}")
     print(f"Disponibilidade: {disponibilidade}")
 
-#ATUALIZACOES
+# ======================================
+# ATUALIZACOES
+# ======================================
 
 def alterar_status_pedido():
     id_pedido = input("ID do pedido: ").strip().upper()
@@ -221,28 +209,19 @@ def cancelar_pedido():
 
 
 def associar_entregador():
-    id_pedido = input("ID do pedido: ").strip().upper()
+    # Busca o pedido pendente mais antigo (primeiro da lista por ordem de cadastro)
+    id_pedido = None
+    for id_p in pedidos.keys():
+        if pedidos[id_p]["status"] == "Pendente" and pedidos[id_p]["entregador"] is None:
+            id_pedido = id_p
+            break
 
-    if not validar_id_pedido(id_pedido):
-        print("ID invalido.")
+    if id_pedido is None:
+        print("Nenhum pedido pendente disponivel para associar.")
+        input("\n[Pressione Enter para continuar]")
         return
 
-    pedido = buscar_pedido_por_id_interno(id_pedido)
-    if pedido is None:
-        print("Pedido nao encontrado.")
-        return
-
-    if pedido["status"] == "Cancelado":
-        print("Pedido cancelado nao recebe entregador.")
-        return
-
-    if pedido["status"] == "Entregue":
-        print("Pedido entregue nao recebe entregador.")
-        return
-
-    if pedido["entregador"] is not None:
-        print("Pedido ja tem entregador.")
-        return
+    print(f"Proximo pedido na fila: {id_pedido} - Cliente: {pedidos[id_pedido]['nome_cliente']}")
 
     id_entregador = input("ID do entregador: ").strip()
 
@@ -263,8 +242,8 @@ def associar_entregador():
         print("Entregador atingiu o limite de", limite_pedidos, "pedidos.")
         return
 
-    pedido["entregador"] = id_entregador
-    pedido["status"] = "Em Rota"
+    pedidos[id_pedido]["entregador"] = id_entregador
+    pedidos[id_pedido]["status"] = "Em Rota"
     ent["pedidos"].append(id_pedido)
 
     if len(ent["pedidos"]) >= limite_pedidos:
@@ -306,7 +285,9 @@ def remover_associacao():
     print("Associacao removida, pedido voltou pra Pendente.")
     input("\n[Pressione Enter para continuar]")
 
-#CONSULTAS
+# ======================================
+# CONSULTAS
+# ======================================
 
 def pedidos_pendentes():
     print("\nPedidos Pendentes")
@@ -413,7 +394,9 @@ def entregas_realizadas_por_entregador():
         print("Nenhuma entrega realizada por este entregador.")
     input("\n[Pressione Enter para continuar]")
 
-#RELATORIOS
+# ======================================
+# RELATORIOS
+# ======================================
 
 STATUS_VALIDOS = ["Pendente", "Em Rota", "Entregue", "Cancelado"]
 
@@ -473,7 +456,9 @@ def relatorio_entregador_maior_entregas():
         print(f"Entregas finalizadas: {maior_total}")
     input("\n[Pressione Enter para continuar]")
 
-#MENUS
+# ======================================
+# MENUS
+# ======================================
 
 def menu_pedidos():
     executando = True
