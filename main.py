@@ -56,14 +56,29 @@ def cadastro_pedido():
 def cadastro_entregador():
     veiculos = ["carro", "van", "moto", "bicicleta", "patinete"]
     id = gerar_id_entregador()
+
     nome = input("Digite o nome do entregador: ")
-    veiculo = input(f"Digite o tipo de veículo ({', '.join(veiculos)}): ")
+
+    for id_entregador in entregador:
+        if entregador[id_entregador]["nome"] == nome:
+            print("Entregador já cadastrado.")
+            input("\n[Pressione Enter para continuar]")
+            limpar_tela()
+            return
+
+    veiculo = input("Digite o tipo de veículo: ")
 
     while veiculo.lower() not in veiculos:
-        veiculo = input(f"Veículo inválido. Digite um dos seguintes: ({', '.join(veiculos)}): ")
+        veiculo = input("Veículo inválido. Digite novamente: ")
 
-    entregador[id] = {"nome": nome, "veiculo": veiculo.lower(), "pedidos": [], "status": True}
-    print(f"Entregador cadastrado com ID: {id}")
+    entregador[id] = {
+        "nome": nome,
+        "veiculo": veiculo,
+        "pedidos": [],
+        "status": True
+    }
+
+    print("Entregador cadastrado com ID:", id)
     input("\n[Pressione Enter para continuar]")
     limpar_tela()
 

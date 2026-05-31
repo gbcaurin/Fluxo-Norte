@@ -67,18 +67,24 @@ def cadastro_pedido():
 
   limpar()
 
-def cadastro_entregador():
-  id = gerar_id_entregador()
-  nome = input("Digite o nome do entregador: ")
-  veiculo = input("Digite o tipo de veículo do entregador: ")
+  def cadastro_entregador():
+    id = gerar_id_entregador()
+    nome = input("Digite o nome do entregador: ")
+    veiculo = input("Digite o tipo de veículo do entregador: ")
 
-  if validar_id_entregador(id) and id not in entregador:
-    entregador[id] = {"nome": nome, "veiculo": veiculo, "pedidos": [], "status": True}
-    print(f"Entregador cadastrado com ID: {id}")
-  else:
-    print("Falha no cadastro do entregador. ID inválido ou já existente.")
+    for info in entregador.values():
+      if info["nome"].lower() == nome.lower():
+        print("Entregador já cadastrado.")
+        limpar()
+        return
 
-  limpar()
+    if validar_id_entregador(id) and id not in entregador:
+      entregador[id] = {"nome": nome, "veiculo": veiculo, "pedidos": [], "status": True}
+      print(f"Entregador cadastrado com ID: {id}")
+    else:
+      print("Falha no cadastro do entregador. ID inválido ou já existente.")
+
+    limpar()
 
 def main():
   limpar()
