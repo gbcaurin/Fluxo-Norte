@@ -56,7 +56,6 @@ def cadastro_pedido():
 def cadastro_entregador():
     veiculos = ["carro", "van", "moto", "bicicleta", "patinete"]
     id = gerar_id_entregador()
-
     nome = input("Digite o nome do entregador: ")
 
     for id_entregador in entregador:
@@ -65,8 +64,16 @@ def cadastro_entregador():
             input("\n[Pressione Enter para continuar]")
             limpar_tela()
             return
+        
+    print("Tipos de veículo disponíveis:")
+    print("carro")
+    print("van")
+    print("moto")
+    print("bicicleta")
+    print("patinete")
 
     veiculo = input("Digite o tipo de veículo: ")
+    
 
     while veiculo.lower() not in veiculos:
         veiculo = input("Veículo inválido. Digite novamente: ")
